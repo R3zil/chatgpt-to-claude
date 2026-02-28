@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatGPT to Claude - Switch with your full context</title>
+    <meta name="description" content="Convert your ChatGPT export to Claude-ready files. Transfer conversations, context, and preferences. Everything runs in your browser - your data never leaves.">
+    <meta name="keywords" content="ChatGPT, Claude, migration, export, convert, AI, conversations, Anthropic, OpenAI">
+    <meta property="og:title" content="ChatGPT to Claude - Switch with your full context">
+    <meta property="og:description" content="Switch from ChatGPT to Claude without starting from scratch. Transfer your conversations, context, and preferences. Privacy-first: everything runs in your browser.">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="ChatGPT to Claude">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="ChatGPT to Claude - Switch with your full context">
+    <meta name="twitter:description" content="Transfer your ChatGPT conversations, memories, and preferences to Claude. Free, open source, privacy-first.">
+    <meta name="theme-color" content="#d97706">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x1F500;</text></svg>">
+    <link rel="stylesheet" href="style.css">
+    <script src="js/lib/jszip.min.js"></script>
+</head>
+<body>
+    <header>
+        <div class="container header-inner">
+            <h1 class="logo">ChatGPT <span class="arrow">-></span> Claude</h1>
+            <nav>
+                <span class="privacy-badge">Your data never leaves your browser</span>
+                <a href="https://github.com/R3zil/chatgpt-to-claude" class="nav-link" target="_blank" rel="noopener">GitHub</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+
+        <!-- ═══ LANDING ═══ -->
+        <section id="landing-section">
+            <div class="hero">
+                <h2>Switch to Claude without starting from scratch</h2>
+                <p class="hero-sub">Transfer your conversations, context, and preferences. Not just files — your AI identity.</p>
+            </div>
+
+            <div id="drop-zone" class="drop-zone">
+                <div class="drop-zone-content">
+                    <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="17 8 12 3 7 8"/>
+                        <line x1="12" y1="3" x2="12" y2="15"/>
+                    </svg>
+                    <p class="drop-text">Drop your ChatGPT export ZIP here</p>
+                    <p class="drop-subtext">or <button id="browse-btn" class="link-btn">click to browse</button></p>
+                </div>
+                <input type="file" id="file-input" accept=".zip" hidden>
+            </div>
+
+            <div id="upload-error" class="error-message" hidden></div>
+
+            <!-- Optional extras -->
+            <div class="extras-section">
+                <details class="extra-input">
+                    <summary>Optional: Paste your ChatGPT Memories</summary>
+                    <p class="extra-hint">Go to ChatGPT -> Settings -> Personalization -> Memory -> Manage, then copy all memories</p>
+                    <textarea id="memories-input" rows="4" placeholder="Paste your ChatGPT memories here..."></textarea>
+                </details>
+                <details class="extra-input">
+                    <summary>Optional: Paste your Custom Instructions</summary>
+                    <p class="extra-hint">Go to ChatGPT -> Settings -> Personalization -> Custom Instructions</p>
+                    <textarea id="instructions-input" rows="4" placeholder="Paste your custom instructions here..."></textarea>
+                </details>
+            </div>
+
+            <!-- How it works -->
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">1</div>
+                    <h3>Export from ChatGPT</h3>
+                    <p>Settings -> Data Controls -> Export Data. You'll get a ZIP via email.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">2</div>
+                    <h3>Drop it here</h3>
+                    <p>We analyze your conversations, extract patterns, and build your profile.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">3</div>
+                    <h3>Upload to Claude</h3>
+                    <p>Download your migration package and upload to a Claude Project.</p>
+                </div>
+            </div>
+
+            <!-- What you get -->
+            <div class="what-you-get">
+                <h3>What you get</h3>
+                <div class="features-grid">
+                    <div class="feature-card accent">
+                        <h4>AI Profile</h4>
+                        <p>A synthesized document capturing who you are, your expertise, and how you work. Becomes Claude's Project Instructions.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>Knowledge Base</h4>
+                        <p>Conversations grouped by topic with extracted insights. "Your Python Projects", "Your Cooking Recipes", etc.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>Clean Conversations</h4>
+                        <p>Full transcripts as organized Markdown files with metadata, ready for Claude Projects.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Privacy -->
+            <div class="privacy-section">
+                <h3>Privacy guarantee</h3>
+                <ul>
+                    <li>Everything runs in your browser. Zero server involvement.</li>
+                    <li>Your data is never transmitted, stored, or logged anywhere.</li>
+                    <li>Open source. Verify it yourself.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- ═══ PROCESSING ═══ -->
+        <section id="processing-section" hidden>
+            <div class="processing-card">
+                <div class="spinner"></div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+                <p class="progress-label" id="progress-text">Reading ZIP...</p>
+            </div>
+        </section>
+
+        <!-- ═══ PREVIEW ═══ -->
+        <section id="preview-section" hidden>
+            <!-- Stats bar -->
+            <div class="stats-bar">
+                <div class="stat"><span class="stat-value" id="stat-conversations">0</span><span class="stat-label">Conversations</span></div>
+                <div class="stat"><span class="stat-value" id="stat-messages">0</span><span class="stat-label">Messages</span></div>
+                <div class="stat"><span class="stat-value" id="stat-date-range">--</span><span class="stat-label">Date Range</span></div>
+                <div class="stat"><span class="stat-value" id="stat-models">--</span><span class="stat-label">Models</span></div>
+                <div class="stat"><span class="stat-value" id="stat-clusters">0</span><span class="stat-label">Topics</span></div>
+            </div>
+
+            <!-- Tabs -->
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="profile">Profile</button>
+                <button class="tab-btn" data-tab="knowledge">Knowledge Base</button>
+                <button class="tab-btn" data-tab="conversations">Conversations</button>
+                <button class="tab-btn" data-tab="settings">Settings</button>
+            </div>
+
+            <!-- Tab: Profile -->
+            <div id="tab-profile" class="tab-panel">
+                <div class="tab-header">
+                    <p>This is your synthesized profile. Copy it into Claude's Project Instructions.</p>
+                    <button id="copy-profile-btn" class="btn btn-primary">Copy to Clipboard</button>
+                </div>
+                <pre id="profile-content" class="profile-preview"></pre>
+            </div>
+
+            <!-- Tab: Knowledge Base -->
+            <div id="tab-knowledge" class="tab-panel" hidden>
+                <p class="tab-desc">Conversations grouped by topic with extracted insights.</p>
+                <div id="knowledge-content"></div>
+            </div>
+
+            <!-- Tab: Conversations -->
+            <div id="tab-conversations" class="tab-panel" hidden>
+                <div class="list-controls">
+                    <input type="text" id="search-input" placeholder="Search conversations..." class="search-box">
+                    <div class="selection-controls">
+                        <button id="select-all-btn" class="btn btn-small">Select All</button>
+                        <button id="select-none-btn" class="btn btn-small">Select None</button>
+                        <span id="selection-count">0 selected</span>
+                    </div>
+                </div>
+                <div id="conversation-list" class="conversation-list"></div>
+                <div id="pagination" class="pagination"></div>
+            </div>
+
+            <!-- Tab: Settings -->
+            <div id="tab-settings" class="tab-panel" hidden>
+                <div class="settings-group">
+                    <h4>Output Options</h4>
+                    <label>
+                        Organization:
+                        <select id="opt-organize">
+                            <option value="monthly" selected>Monthly</option>
+                            <option value="yearly">Yearly</option>
+                            <option value="flat">Flat</option>
+                        </select>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="opt-frontmatter" checked>
+                        Include YAML frontmatter
+                    </label>
+                </div>
+
+                <div class="settings-group">
+                    <h4>AI-Enhanced Synthesis (Optional)</h4>
+                    <p class="settings-hint">Use your own API key for deeper, AI-powered analysis of your profile and knowledge base. Your key is never stored or transmitted beyond the API call.</p>
+                    <label>
+                        Provider:
+                        <select id="byok-provider">
+                            <option value="claude" selected>Claude (Anthropic)</option>
+                            <option value="openai">OpenAI</option>
+                        </select>
+                    </label>
+                    <label>
+                        API Key:
+                        <input type="password" id="byok-api-key" placeholder="sk-... or your Anthropic key" class="api-key-input">
+                    </label>
+                    <div class="byok-actions">
+                        <button id="byok-validate-btn" class="btn btn-small">Validate Key</button>
+                        <button id="byok-enhance-btn" class="btn btn-primary btn-small" disabled>Enhance with AI</button>
+                        <span id="byok-status" class="byok-status"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="actions-bar">
+                <button id="convert-btn" class="btn btn-primary">Convert Selected</button>
+                <button id="convert-all-btn" class="btn btn-secondary">Download All</button>
+                <button id="start-over-btn" class="btn btn-text">Start Over</button>
+            </div>
+        </section>
+
+        <!-- ═══ DOWNLOAD ═══ -->
+        <section id="download-section" hidden></section>
+
+    </main>
+
+    <!-- Converting overlay -->
+    <div id="converting-overlay" class="overlay" hidden>
+        <div class="overlay-content">
+            <div class="spinner"></div>
+            <p>Building your migration package...</p>
+        </div>
+    </div>
+
+    <!-- Preview modal -->
+    <div id="preview-modal" class="modal" hidden>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="preview-title">Conversation</h2>
+                <button id="preview-close" class="btn btn-text close-btn">X</button>
+            </div>
+            <pre id="preview-body" class="modal-body"><div class="spinner"></div></pre>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p class="footer-text">Open source. Your data never leaves your browser. Built for people switching to Claude.</p>
+        </div>
+    </footer>
+
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>

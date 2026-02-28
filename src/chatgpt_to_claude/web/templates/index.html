@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Upload Section -->
+<section id="upload-section">
+    <div id="drop-zone" class="drop-zone">
+        <div class="drop-zone-content">
+            <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="17 8 12 3 7 8"/>
+                <line x1="12" y1="3" x2="12" y2="15"/>
+            </svg>
+            <p class="drop-text">Drop your ChatGPT export ZIP here</p>
+            <p class="drop-subtext">or <button id="browse-btn" class="link-btn">click to browse</button></p>
+        </div>
+        <input type="file" id="file-input" accept=".zip" hidden>
+    </div>
+
+    <div id="upload-progress" class="progress-bar" hidden>
+        <div class="progress-fill"></div>
+        <span class="progress-text">Uploading...</span>
+    </div>
+
+    <div id="upload-error" class="error-message" hidden></div>
+
+    <div class="how-to">
+        <h3>How to get your ChatGPT export</h3>
+        <ol>
+            <li>Go to <strong>ChatGPT</strong> → Settings → Data Controls</li>
+            <li>Click <strong>"Export data"</strong></li>
+            <li>Download the ZIP from your email</li>
+            <li>Drop it here</li>
+        </ol>
+    </div>
+</section>
+
+<!-- Preview Section (hidden until upload completes) -->
+<section id="preview-section" hidden>
+    <!-- Stats bar -->
+    <div class="stats-bar">
+        <div class="stat"><span class="stat-value" id="stat-conversations">0</span><span class="stat-label">Conversations</span></div>
+        <div class="stat"><span class="stat-value" id="stat-messages">0</span><span class="stat-label">Messages</span></div>
+        <div class="stat"><span class="stat-value" id="stat-date-range">—</span><span class="stat-label">Date Range</span></div>
+        <div class="stat"><span class="stat-value" id="stat-models">—</span><span class="stat-label">Models</span></div>
+    </div>
+
+    <!-- Options -->
+    <div class="options-panel">
+        <h3>Options</h3>
+        <div class="options-row">
+            <label>
+                Organization:
+                <select id="opt-organize">
+                    <option value="monthly" selected>Monthly</option>
+                    <option value="yearly">Yearly</option>
+                    <option value="flat">Flat</option>
+                </select>
+            </label>
+            <label class="checkbox-label">
+                <input type="checkbox" id="opt-frontmatter" checked>
+                Include YAML frontmatter
+            </label>
+        </div>
+    </div>
+
+    <!-- Search + selection controls -->
+    <div class="list-controls">
+        <input type="text" id="search-input" placeholder="Search conversations..." class="search-box">
+        <div class="selection-controls">
+            <button id="select-all-btn" class="btn btn-small">Select All</button>
+            <button id="select-none-btn" class="btn btn-small">Select None</button>
+            <span id="selection-count">0 selected</span>
+        </div>
+    </div>
+
+    <!-- Conversation list -->
+    <div id="conversation-list" class="conversation-list"></div>
+
+    <!-- Pagination -->
+    <div id="pagination" class="pagination"></div>
+
+    <!-- Actions -->
+    <div class="actions-bar">
+        <button id="convert-btn" class="btn btn-primary">Convert Selected</button>
+        <button id="convert-all-btn" class="btn btn-secondary">Download All</button>
+        <button id="start-over-btn" class="btn btn-text">Start Over</button>
+    </div>
+</section>
+
+<!-- Conversion progress -->
+<div id="converting-overlay" class="overlay" hidden>
+    <div class="overlay-content">
+        <div class="spinner"></div>
+        <p>Converting conversations...</p>
+        <p class="converting-subtext">Building your Claude-ready export</p>
+    </div>
+</div>
+
+<!-- Preview modal -->
+<div id="preview-modal" class="modal" hidden>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 id="preview-title">Conversation</h2>
+            <button id="preview-close" class="btn btn-text">✕</button>
+        </div>
+        <div id="preview-body" class="modal-body">
+            <div class="spinner"></div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('web.static', filename='js/app.js') }}"></script>
+{% endblock %}

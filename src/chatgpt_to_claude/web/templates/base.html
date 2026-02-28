@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatGPT → Claude</title>
+    <link rel="stylesheet" href="{{ url_for('web.static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1 class="logo">ChatGPT → Claude</h1>
+            <span class="tagline">Convert your ChatGPT exports to Claude-ready Markdown</span>
+        </div>
+    </header>
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
+    <footer>
+        <div class="container">
+            <p class="privacy-notice">
+                🔒 Everything runs locally on your machine. Your data never leaves this computer.
+            </p>
+        </div>
+    </footer>
+    {% block scripts %}{% endblock %}
+</body>
+</html>
