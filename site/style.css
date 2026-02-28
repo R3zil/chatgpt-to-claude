@@ -291,6 +291,7 @@ main { flex: 1; padding: 40px 0 60px; }
 }
 
 /* ─── Modal ─── */
+.modal[hidden] { display: none; }
 .modal {
   position: fixed; inset: 0; z-index: 100;
   background: rgba(0, 0, 0, 0.8);
@@ -315,6 +316,7 @@ main { flex: 1; padding: 40px 0 60px; }
 }
 
 /* ─── Overlay ─── */
+.overlay[hidden] { display: none; }
 .overlay {
   position: fixed; inset: 0; z-index: 200;
   background: rgba(0, 0, 0, 0.85);
