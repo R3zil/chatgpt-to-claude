@@ -54,7 +54,9 @@ async function sendClaude(config, systemPrompt, userMessage) {
   }
 
   const data = await response.json();
-  return data.content?.[0]?.text || '';
+  const text = data.content?.[0]?.text;
+  if (!text) throw new Error('Claude returned an empty response');
+  return text;
 }
 
 async function sendOpenAI(config, systemPrompt, userMessage) {
@@ -82,7 +84,9 @@ async function sendOpenAI(config, systemPrompt, userMessage) {
   }
 
   const data = await response.json();
-  return data.choices?.[0]?.message?.content || '';
+  const text = data.choices?.[0]?.message?.content;
+  if (!text) throw new Error('OpenAI returned an empty response');
+  return text;
 }
 
 /**

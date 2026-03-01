@@ -369,7 +369,7 @@ function detectExpertise(messages) {
   const allText = messages.join(' ').toLowerCase();
   const results = [];
   for (const [keyword, name] of Object.entries(TECH_KEYWORDS)) {
-    const regex = new RegExp(`\\b${keyword.replace(/[+#]/g, '\\$&')}\\b`, 'gi');
+    const regex = new RegExp(`\\b${keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'gi');
     const matches = allText.match(regex);
     if (matches && matches.length >= 2) results.push({ name, keyword, mentions: matches.length });
   }

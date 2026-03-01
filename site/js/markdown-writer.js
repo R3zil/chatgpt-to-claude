@@ -111,7 +111,7 @@ function renderContentPart(part) {
     case CONTENT_TYPES.BROWSING_QUOTE: {
       const lines = [];
       if (part.title) {
-        lines.push(part.url ? `> **[${part.title}](${part.url})**` : `> **${part.title}**`);
+        lines.push(part.url ? `> **[${part.title}](${encodeURI(part.url)})**` : `> **${part.title}**`);
       }
       if (part.text) lines.push(`> ${part.text}`);
       return lines.join('\n');

@@ -35,7 +35,11 @@ async function findAndParseConversations(zip) {
 
   try {
     const text = await zip.file(target).async('text');
-    return JSON.parse(text);
+    const parsed = JSON.parse(text);
+    if (!Array.isArray(parsed)) {
+      throw new Error('conversations.json must be an array — is this a valid ChatGPT export?');
+    }
+    return parsed;
   } catch (e) {
     throw new Error(`Failed to parse conversations.json: ${e.message}`);
   }

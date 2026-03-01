@@ -177,7 +177,7 @@ function detectExpertise(messages) {
 
   for (const [keyword, name] of Object.entries(TECH_KEYWORDS)) {
     // Count word-boundary matches
-    const regex = new RegExp(`\\b${keyword.replace(/[+#]/g, '\\$&')}\\b`, 'gi');
+    const regex = new RegExp(`\\b${keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'gi');
     const matches = allText.match(regex);
     if (matches && matches.length >= 2) {
       results.push({ name, keyword, mentions: matches.length });

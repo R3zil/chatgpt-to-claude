@@ -320,9 +320,14 @@ function resetToLanding() {
   filteredConversations = [];
   currentPage = 1;
   $('#file-input').value = '';
-  $('#search-input').value = '';
-  $('#memories-input').value = '';
-  $('#instructions-input').value = '';
+  if ($('#search-input')) $('#search-input').value = '';
+  if ($('#memories-input')) $('#memories-input').value = '';
+  if ($('#instructions-input')) $('#instructions-input').value = '';
+  if ($('#byok-api-key')) $('#byok-api-key').value = '';
+  if ($('#byok-provider')) $('#byok-provider').value = 'claude';
+  if ($('#byok-status')) { $('#byok-status').textContent = ''; $('#byok-status').className = 'byok-status'; }
+  if ($('#byok-enhance-btn')) $('#byok-enhance-btn').disabled = true;
+  switchTab('profile');
   transitionTo(STATE.LANDING);
 }
 
@@ -356,11 +361,14 @@ function displayProfile() {
 }
 
 function copyProfile() {
+  const btn = $('#copy-profile-btn');
+  const original = btn.textContent;
   navigator.clipboard.writeText(profileMarkdown).then(() => {
-    const btn = $('#copy-profile-btn');
-    const original = btn.textContent;
     btn.textContent = 'Copied!';
     setTimeout(() => btn.textContent = original, 2000);
+  }).catch(() => {
+    btn.textContent = 'Copy failed — select text manually';
+    setTimeout(() => btn.textContent = original, 3000);
   });
 }
 
@@ -490,7 +498,7 @@ function renderPagination() {
 function handleSearch() {
   const query = $('#search-input').value.toLowerCase().trim();
   filteredConversations = query
-    ? metadata.filter(c => c.title.toLowerCase().includes(query))
+    ? metadata.filter(c => c.title?.toLowerCase().includes(query))
     : [...metadata];
   currentPage = 1;
   renderConversationList();
@@ -604,7 +612,7 @@ async function convertAndDownload(ids) {
     a.click();
     document.body.removeChild(a);
 
-    setTimeout(() => URL.revokeObjectURL(url), 5000);
+    setTimeout(() => URL.revokeObjectURL(url), 30000);
     $('#converting-overlay').hidden = true;
 
   } catch (err) {

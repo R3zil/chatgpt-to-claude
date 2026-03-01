@@ -29,7 +29,7 @@ function generateClusterSummary(cluster) {
   const dates = cluster.conversations
     .filter(c => c.createdAt)
     .map(c => c.createdAt)
-    .sort((a, b) => a - b);
+    .sort((a, b) => a.getTime() - b.getTime());
 
   if (dates.length > 0) {
     const start = dates[0].toISOString().slice(0, 7); // YYYY-MM

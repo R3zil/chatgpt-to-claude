@@ -33,7 +33,7 @@ export function computeStatistics(conversations) {
       stats.totalMessages += conv.messageCount;
       if (conv.modelSlugs) {
         for (const slug of conv.modelSlugs) {
-          if (!(slug in stats.modelsUsed)) stats.modelsUsed[slug] = 0;
+          stats.modelsUsed[slug] = (stats.modelsUsed[slug] || 0) + 1;
         }
       }
     }
